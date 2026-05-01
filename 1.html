@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mechanic finder</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            background: #0b1220;
+            color: #e7edf8;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background: radial-gradient(circle at top left, rgba(239, 68, 68, 0.16), transparent 30%),
+                        radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.16), transparent 28%),
+                        linear-gradient(180deg, #060a14 0%, #111827 100%);
+        }
+        .chat-app {
+            width: min(100%, 780px);
+            background: linear-gradient(145deg, rgba(255, 213, 79, 0.12), rgba(236, 72, 153, 0.12) 32%, rgba(59, 130, 246, 0.14) 68%, rgba(16, 185, 129, 0.10));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(16px);
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 40px 120px rgba(15, 23, 42, 0.45);
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            min-height: 560px;
+        }
+        .header {
+            padding: 24px 28px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+        .header-title {
+            min-width: 0;
+        }
+        .header-title h1 {
+            margin: 0;
+            font-size: 1.45rem;
+            letter-spacing: -0.03em;
+        }
+        .header-title p {
+            margin: 8px 0 0;
+            color: #a3bffa;
+        }
+        .location-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 14px;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #f8fafc;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background .18s ease, transform .18s ease;
+            text-decoration: none;
+        }
+        .location-action:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.14);
+        }
+        .location-action svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+        .messages {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+        .messages::-webkit-scrollbar {
+            width: 10px;
+        }
+        .messages::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,.12);
+            border-radius: 999px;
+        }
+        .message {
+            max-width: 78%;
+            padding: 16px 18px;
+            border-radius: 18px;
+            line-height: 1.6;
+            position: relative;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .message.user {
+            margin-left: auto;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+        .message.bot {
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.08);
+            color: #e2e8f0;
+            border-bottom-left-radius: 4px;
+        }
+        .footer {
+            padding: 18px 24px;
+            border-top: 1px solid rgba(255,255,255,.08);
+            background: rgba(15, 23, 42, 0.9);
+        }
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+        }
+        .input-row input {
+            width: 100%;
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 14px;
+            padding: 16px 18px;
+            background: rgba(15, 23, 42, 0.95);
+            color: #f8fafc;
+            font-size: 1rem;
+            outline: none;
+        }
+        .input-row button {
+            border: none;
+            border-radius: 14px;
+            padding: 0 22px;
+            background: #2563eb;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform .18s ease, background .18s ease;
+        }
+        .input-row button:hover {
+            transform: translateY(-1px);
+            background: #1e40af;
+        }
+        @media (max-width: 600px) {
+            .chat-app {
+                min-height: 100vh;
+                border-radius: 0;
+            }
+            .header, .footer {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+            .messages {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="chat-app" aria-label="Chatbot interface">
+        <header class="header">
+            <div class="header-title">
+                <h1>Mechanic Finder</h1>
+                <p>Tell us how we can help you !!</p>
+            </div>
+            <button type="button" class="location-action" aria-label="Trace location">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z" />
+                </svg>
+                Location
+            </button>
+        </header>
+        <main class="messages" id="messages" aria-live="polite"></main>
+        <footer class="footer">
+            <form id="chat-form" class="input-row">
+                <input id="prompt" type="text" autocomplete="off" placeholder="Ask me anything..." aria-label="Message input" required />
+                <button type="submit">Send</button>
+            </form>
+        </footer>
+    </section>
+</body>
+</html>
