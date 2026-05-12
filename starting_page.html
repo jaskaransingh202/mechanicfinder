@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helper or Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="logo.favicon.png">
+    <style>
+        :root {
+            --cream-light: #FFFDD0;
+            --cream-main: #FAF3E0;
+            --cream-dark: #F5E6CC;
+            --accent: #8B6F47;
+            --text: #333333;
+            --bg-gradient: linear-gradient(135deg, var(--cream-light) 0%, var(--cream-main) 50%, var(--cream-dark) 100%);
+            --container-bg: var(--cream-main);
+            --border-color: var(--accent);
+            --shadow-color: rgba(139, 111, 71, 0.25);
+            --button-bg: linear-gradient(135deg, var(--accent) 0%, #6d5738 100%);
+            --button-hover: linear-gradient(135deg, #9d7f52 0%, #8B6F47 100%);
+            --button-shadow: rgba(139, 111, 71, 0.3);
+        }
+        [data-theme="dark"] {
+            --cream-light: #1a1a1a;
+            --cream-main: #2d2d2d;
+            --cream-dark: #404040;
+            --accent: #bb86fc;
+            --text: #ffffff;
+            --bg-gradient: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 50%, #2d2d2d 100%);
+            --container-bg: var(--cream-main);
+            --border-color: var(--accent);
+            --shadow-color: rgba(187, 134, 252, 0.25);
+            --button-bg: linear-gradient(135deg, var(--accent) 0%, #9d4edd 100%);
+            --button-hover: linear-gradient(135deg, #c77dff 0%, #bb86fc 100%);
+            --button-shadow: rgba(187, 134, 252, 0.3);
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: var(--bg-gradient);
+            color: var(--text);
+        }
+        .container {
+            text-align: center;
+            background: var(--container-bg);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--border-color);
+            padding: 40px 50px;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px var(--shadow-color), inset 0 1px 0 rgba(255, 253, 208, 0.5);
+            min-width: 320px;
+            position: relative;
+        }
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--accent);
+            color: rgb(255, 255, 255);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background 0.2s ease;
+        }
+        .theme-toggle:hover {
+            background: var(--button-hover);
+        }
+        .fade-out {
+            animation: fadeOut 0.4s ease forwards;
+        }
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+        }
+        h1 {
+            margin-bottom: 10px;
+            color: var(--accent);
+            font-size: 28px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(139, 111, 71, 0.2);
+        }
+        p {
+            margin-top: 0;
+            color: var(--text);
+            font-weight: 500;
+            font-size: 16px;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 170px;
+            margin: 0;
+            padding: 16px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            color: rgb(255, 255, 255);
+            box-shadow: 0 4px 12px var(--button-shadow), 0 2px 6px var(--button-shadow);
+        }
+        /* Button colors by ID  */
+        #btn-mechanic { background: var(--button-bg); }
+        #btn-food-market { background: linear-gradient(135deg, #9d8565 0%, var(--accent) 100%); }
+        #btn-gas-station { background: linear-gradient(135deg, #7a6240 0%, #8B6F47 100%); }
+        #btn-other-problem { background: linear-gradient(135deg, #7a6240 0%, #6d5738 100%); }
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px var(--button-shadow), 0 4px 8px var(--button-shadow), inset 0 0 20px rgba(166, 7, 7, 0.2);
+            background: white;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button id="theme-toggle" class="theme-toggle">🌙</button>
+        <h1>Welcome to Helper or Explorer</h1>
+        <p>Select an option:</p>
+        <div class="button-row">
+            <button id="btn-mechanic" onclick="selectOption('mechanic')">🔧 Mechanic</button>
+            <button id="btn-food-market" onclick="selectOption('food_market')">🍔 Food Market Nearby</button>
+            <button id="btn-gas-station" onclick="selectOption('gas_station')">⛽ Gas Station 24x7</button>
+            <button id="btn-other-problem" onclick="selectOption('other')">❓ Other Problem</button>
+        </div>
+    </div>
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        themeToggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        });
+
+        function navigateTo(url) {
+            const container = document.querySelector('.container');
+            if (!container) {
+                window.location.href = url;
+                return;
+            }
+            container.classList.add('fade-out');
+            document.body.style.pointerEvents = 'none';
+            setTimeout(() => {
+                window.location.href = url;
+            }, 400);
+        }
+
+        function selectOption(option) {
+            if (option === 'mechanic') {
+                navigateTo('mechanic.html');
+            } else if (option === 'food_market') {
+                alert('Food Market feature coming soon!');
+            } else if (option === 'gas_station') {
+                alert('Gas Station feature coming soon!');
+            } else if (option === 'other') {
+                alert('Other Problem feature coming soon!');
+            }
+        }
+    </script>
+</body>
+</html>
